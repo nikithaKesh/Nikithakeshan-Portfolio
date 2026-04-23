@@ -32,7 +32,9 @@
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=DM+Sans:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
+  
   <script src="https://unpkg.com/@phosphor-icons/web"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
 
   <script type="application/ld+json">
   {
@@ -276,49 +278,21 @@
     .g-dot:nth-child(1) { background: var(--g-blue); animation-delay: 0s; } .g-dot:nth-child(2) { background: var(--g-red); animation-delay: 0.1s; } .g-dot:nth-child(3) { background: var(--g-yellow); animation-delay: 0.2s; } .g-dot:nth-child(4) { background: var(--g-green); animation-delay: 0.3s; }
     @keyframes dotBounce { 0%, 100% { transform: translateY(0); opacity: 0.7; } 50% { transform: translateY(-12px); opacity: 1; } }
 
-    .site-header {
-      position: fixed;
-      top: 0;
-      left: 0;
-      right: 0;
-      z-index: 1500;
-      padding-top: 0;
-      transition: padding var(--transition);
-    }
-    
-    .site-header.scrolled {
-      padding-top: 16px;
-    }
+    .site-header { position: fixed; top: 0; left: 0; right: 0; z-index: 1500; padding-top: 0; transition: padding var(--transition); }
+    .site-header.scrolled { padding-top: 16px; }
 
     .nav-shell {
-      width: 100%;
-      margin-inline: auto;
-      height: var(--nav-h);
-      border-radius: 0;
-      padding: 0 24px;
-      border: 1px solid transparent;
-      border-bottom-color: var(--line);
-      background: var(--nav-bg);
-      backdrop-filter: blur(24px);
-      box-shadow: none;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      gap: 24px;
-      transition: all var(--transition);
+      width: 100%; margin-inline: auto; height: var(--nav-h); border-radius: 0; padding: 0 24px;
+      border: 1px solid transparent; border-bottom-color: var(--line); background: var(--nav-bg);
+      backdrop-filter: blur(24px); box-shadow: none; display: flex; align-items: center;
+      justify-content: space-between; gap: 24px; transition: all var(--transition);
     }
     
-    @media (min-width: 1248px) {
-      .nav-shell { padding: 0 calc(50vw - 600px); }
-    }
+    @media (min-width: 1248px) { .nav-shell { padding: 0 calc(50vw - 600px); } }
 
     .site-header.scrolled .nav-shell {
-      width: min(calc(var(--container) + 16px), calc(100% - 32px));
-      border-radius: var(--radius-pill);
-      padding: 0 16px 0 24px;
-      border-color: var(--line);
-      background: var(--nav-bg-scrolled);
-      box-shadow: var(--shadow);
+      width: min(calc(var(--container) + 16px), calc(100% - 32px)); border-radius: var(--radius-pill);
+      padding: 0 16px 0 24px; border-color: var(--line); background: var(--nav-bg-scrolled); box-shadow: var(--shadow);
     }
 
     .brand { display: inline-flex; align-items: center; gap: 12px; }
@@ -513,28 +487,211 @@
 
     /* CV Modal Styles */
     .cv-modal {
-      width: min(850px, calc(100% - 32px));
+      width: min(1060px, calc(100% - 32px));
       background: color-mix(in srgb, var(--surface) 75%, transparent);
       backdrop-filter: blur(24px);
     }
+    
+    /* Hide scrollbar for CV Modal */
+    #cvModal::-webkit-scrollbar {
+      display: none;
+    }
+    #cvModal {
+      -ms-overflow-style: none;  /* IE and Edge */
+      scrollbar-width: none;  /* Firefox */
+    }
+
     .cv-paper {
       background: linear-gradient(145deg, var(--surface), var(--surface-2));
       border-radius: var(--radius-md);
-      padding: 48px;
       box-shadow: 0 8px 32px rgba(0,0,0,0.06);
       display: grid;
+      grid-template-columns: 340px 1fr;
+      overflow: hidden;
+      border: 1px solid var(--line);
+    }
+    
+    .cv-sidebar {
+      background: var(--surface-2);
+      padding: 48px 32px;
+      border-right: 1px solid var(--line);
+      display: grid;
+      align-content: start;
       gap: 40px;
     }
-    .cv-header { text-align: center; border-bottom: 1px solid var(--line-strong); padding-bottom: 24px; }
-    .cv-header h2 { font-size: 2.5rem; margin-bottom: 8px; }
-    .cv-header p { color: var(--primary); font-family: var(--font-mono); font-weight: 600; letter-spacing: 0.05em; text-transform: uppercase; font-size: 0.9rem; }
-    .cv-section-title { font-family: var(--font-mono); text-transform: uppercase; letter-spacing: 0.05em; font-size: 0.85rem; color: var(--primary); border-bottom: 1px solid var(--line); padding-bottom: 8px; margin-bottom: 24px; }
-    .cv-item { margin-bottom: 24px; }
-    .cv-item:last-child { margin-bottom: 0; }
-    .cv-item-header { display: flex; justify-content: space-between; align-items: baseline; flex-wrap: wrap; gap: 8px; margin-bottom: 8px; }
-    .cv-item-title { font-size: 1.1rem; font-weight: 700; font-family: var(--font-display); }
-    .cv-item-meta { font-family: var(--font-mono); font-size: 0.8rem; color: var(--muted); }
-    .cv-item-desc { color: var(--muted); line-height: 1.6; font-size: 0.95rem; }
+    
+    .cv-profile-img {
+      width: 250px;
+      height: 250px;
+      border-radius: 50%;
+      object-fit: cover;
+      border: 1px solid var(--line-strong);
+      margin-bottom: 24px;
+      margin-left: auto;  
+      margin-right: auto; 
+      background: var(--surface);
+      box-shadow: var(--shadow-soft);
+    }
+
+    .cv-main-content {
+      padding: 48px 40px;
+      display: grid;
+      align-content: start;
+      gap: 40px;
+    }
+
+    .cv-header-mobile { display: none; }
+    
+    .cv-header h1 { 
+      font-size: clamp(2rem, 3.5vw, 2.8rem); 
+      font-weight: 800; 
+      letter-spacing: -0.02em; 
+      line-height: 1.1; 
+      color: var(--text);
+    }
+    
+    .cv-section { display: grid; gap: 24px; }
+    .cv-section-title { 
+      font-family: var(--font-mono); 
+      text-transform: uppercase; 
+      letter-spacing: 0.1em; 
+      font-size: 0.85rem; 
+      color: var(--primary); 
+      border-bottom: 2px solid var(--line-strong); 
+      padding-bottom: 12px; 
+      font-weight: 600; 
+    }
+    
+    .cv-item { display: grid; gap: 8px; }
+    .cv-item-header { 
+      display: flex; 
+      justify-content: space-between; 
+      align-items: baseline; 
+      flex-wrap: wrap; 
+      gap: 8px; 
+    }
+    .cv-item-title { 
+      font-size: 1.1rem; 
+      font-weight: 700; 
+      font-family: var(--font-display); 
+      color: var(--text);
+    }
+    .cv-item-subtitle {
+      font-family: var(--font-mono); 
+      font-size: 0.9rem; 
+      color: var(--muted-2); 
+      font-weight: 500;
+    }
+    .cv-item-meta { 
+      font-family: var(--font-mono); 
+      font-size: 0.8rem; 
+      color: var(--text);
+      background: var(--bg);
+      padding: 4px 10px;
+      border-radius: var(--radius-sm);
+      border: 1px solid var(--line);
+      font-weight: 600;
+    }
+    .cv-item-desc { 
+      color: var(--muted); 
+      line-height: 1.6; 
+      font-size: 0.95rem; 
+    }
+
+    .cv-contact-list { display: grid; gap: 16px; }
+    .cv-contact-item {
+      display: flex;
+      align-items: flex-start;
+      gap: 12px;
+      font-size: 0.9rem;
+      color: var(--muted);
+      line-height: 1.5;
+    }
+    .cv-contact-item a { color: var(--text); transition: var(--transition); }
+    .cv-contact-item a:hover { color: var(--primary); text-decoration: underline; }
+    .cv-contact-icon {
+      color: var(--primary);
+      font-size: 1.2rem;
+      margin-top: 2px;
+      flex-shrink: 0;
+    }
+
+    .cv-references-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 24px;
+    }
+
+    /* ---------------------------------------------------- */
+    /* PDF Export Override Class - Optimized for exactly 1-page A4 */
+    /* ---------------------------------------------------- */
+    .cv-paper.is-exporting {
+      position: absolute !important;
+      top: 0 !important;
+      left: 0 !important;
+      z-index: -9999 !important; /* Hide off-screen while rendering */
+      width: 794px !important;
+      height: 1123px !important;
+      max-width: 794px !important;
+      min-height: 1123px !important;
+      margin: 0 !important;
+      padding: 0 !important;
+      gap: 0 !important;
+      border: none !important;
+      border-radius: 0 !important;
+      box-shadow: none !important;
+      background: #ffffff !important;
+      display: grid !important;
+      grid-template-columns: 280px 1fr !important;
+      overflow: hidden !important; /* Prevent content spilling */
+      color: #16202b !important;
+    }
+    .cv-paper.is-exporting * {
+      box-sizing: border-box !important;
+    }
+    .cv-paper.is-exporting .cv-sidebar {
+      padding: 32px 24px !important;
+      gap: 20px !important;
+      background: #f8f9fa !important;
+      border-right: 1px solid #e2e8f0 !important;
+      border-bottom: none !important;
+      height: 1123px !important;
+      align-content: start !important;
+      display: grid !important; /* Forces desktop layout */
+    }
+    .cv-paper.is-exporting .cv-main-content {
+      padding: 32px 32px !important;
+      gap: 20px !important;
+      background: #ffffff !important;
+      height: 1123px !important;
+      align-content: start !important;
+      display: grid !important; /* Forces desktop layout */
+    }
+    /* Force Header Desktop view */
+    .cv-paper.is-exporting .cv-header-mobile { display: none !important; }
+    .cv-paper.is-exporting .cv-header-desktop { display: block !important; }
+    
+    .cv-paper.is-exporting .cv-profile-img {
+      width: 140px !important;
+      height: 140px !important;
+      margin: 0 auto 16px auto !important;
+      border-color: #cbd5e1 !important;
+      background: #fff !important;
+    }
+    .cv-paper.is-exporting .cv-header h1 { font-size: 1.8rem !important; color: #0f172a !important; margin-bottom: 0 !important; }
+    .cv-paper.is-exporting .cv-section { gap: 12px !important; }
+    .cv-paper.is-exporting .cv-section-title { margin-bottom: 8px !important; padding-bottom: 4px !important; font-size: 0.85rem !important; color: #2f73ef !important; border-bottom: 2px solid #e2e8f0 !important; }
+    .cv-paper.is-exporting .cv-item { gap: 4px !important; margin-bottom: 12px !important; }
+    .cv-paper.is-exporting .cv-item:last-child { margin-bottom: 0 !important; }
+    .cv-paper.is-exporting .cv-item-title { font-size: 1rem !important; color: #0f172a !important; }
+    .cv-paper.is-exporting .cv-item-subtitle { font-size: 0.85rem !important; color: #475569 !important; }
+    .cv-paper.is-exporting .cv-item-meta { font-size: 0.75rem !important; border: 1px solid #cbd5e1 !important; background: #f1f5f9 !important; color: #334155 !important; }
+    .cv-paper.is-exporting .cv-item-desc { font-size: 0.85rem !important; line-height: 1.4 !important; color: #334155 !important; }
+    .cv-paper.is-exporting .cv-item-desc li { margin-bottom: 2px !important; }
+    .cv-paper.is-exporting .cv-contact-item { font-size: 0.85rem !important; margin-bottom: 8px !important; color: #334155 !important; }
+    .cv-paper.is-exporting .cv-contact-item a { color: #334155 !important; text-decoration: none !important; }
+    .cv-paper.is-exporting .cv-contact-icon { color: #2f73ef !important; }
+    .cv-paper.is-exporting .cv-references-grid { gap: 16px !important; display: grid !important; grid-template-columns: repeat(2, 1fr) !important; }
 
     .toast { position: fixed; right: 24px; bottom: 24px; z-index: 1800; min-width: 300px; max-width: 420px; padding: 16px 24px; border-radius: var(--radius-md); background: var(--text); color: var(--bg); box-shadow: var(--shadow); transform: translateY(24px); opacity: 0; visibility: hidden; transition: var(--transition); }
     .toast.show { transform: translateY(0); opacity: 1; visibility: visible; }
@@ -569,7 +726,15 @@
       .project-toolbar { flex-direction: column; align-items: stretch; }
       .toolbar-inputs { flex-direction: column; }
       .toolbar-search { max-width: 100%; }
-      .cv-paper { padding: 32px; }
+    }
+
+    @media (max-width: 860px) {
+      .cv-paper { grid-template-columns: 1fr; }
+      .cv-sidebar { padding: 32px; border-right: none; border-bottom: 1px solid var(--line); }
+      .cv-main-content { padding: 32px; }
+      .cv-header-mobile { display: block; margin-bottom: -16px; }
+      .cv-header-desktop { display: none; }
+      .cv-profile-img { width: 100px; height: 100px; margin-bottom: 16px; }
     }
 
     @media (max-width: 640px) {
@@ -670,9 +835,12 @@
       .gallery-shell { padding: 16px; gap: 12px; }
       .meta-block { padding: 16px; }
       .case-section { padding: 16px; }
-      
-      .cv-paper { padding: 20px; gap: 24px; }
-      .cv-header h2 { font-size: 1.8rem; }
+
+      .cv-sidebar, .cv-main-content { padding: 24px; gap: 32px; }
+      .cv-paper { border-radius: 0; border-left: none; border-right: none; }
+      .cv-header h1 { font-size: 1.8rem; }
+
+      .cv-references-grid { grid-template-columns: 1fr; }
     }
 
     @media (prefers-reduced-motion: reduce) {
@@ -682,7 +850,6 @@
       .status-dot { animation: none; }
     }
   </style>
-
 </head>
 <body>
   <a href="#main-content" class="skip-link">Skip to content</a>
@@ -742,7 +909,7 @@
         <a href="#now" class="nav-link mobile-link">Now</a>
         <a href="#experience" class="nav-link mobile-link">Experience</a>
         <a href="#contact" class="nav-link mobile-link">Contact</a>
-        <a href="NikithaKeshan.pdf" class="btn btn-primary mobile-link" style="margin-top: 16px;" download>
+        <a href="NikithaKeshan.pdf" class="btn btn-primary mobile-link" style="margin-top: 16px; width: 100%;" download>
           Resume
         </a>
       </div>
@@ -1447,170 +1614,194 @@
   </section>
 
   <section class="modal cv-modal" id="cvModal" role="dialog" aria-modal="true" aria-labelledby="cvModalTitle" tabindex="-1">
-    <div class="modal-header">
-      <div>
-        <div class="mono" style="margin-bottom: 8px;">Curriculum Vitae</div>
-        <h3 class="title-lg" id="cvModalTitle" style="font-size: clamp(1.5rem, 3vw, 2.2rem);">Virtual Resume</h3>
-      </div>
+    <div class="modal-header" style="justify-content: flex-end; align-items: center; border-bottom: none; padding-bottom: 0;">
       <button class="btn-icon" id="cvModalClose" type="button" aria-label="Close resume dialog">
         <i class="ph ph-x"></i>
       </button>
     </div>
 
-    <div class="modal-body" style="padding-top: 0;">
+    <div class="modal-body" style="padding-top: 16px;">
       <div class="cv-paper">
-        <div class="cv-header">
-          <h1>P.N.C.K. GOMES</h1>
-        </div>
-
-        <div>
-          <div class="cv-section-title">Summary</div>
-          <div class="cv-item">
-            <p class="cv-item-desc">As an enthusiastic and adaptable young professional, I aspire to advance my career in the IT industry as a skilled, dependable expert. I aim to contribute my technical knowledge, problem-solving abilities, and strong interpersonal skills to a well-respected organization.</p>
-          </div>
-        </div>
-
-        <div>
-          <div class="cv-section-title">Contact</div>
-          <div class="cv-item" style="display: grid; gap: 12px;">
-            <p class="cv-item-desc" style="display: flex; align-items: center; gap: 8px;">
-              <i class="ph ph-phone" style="font-size: 1.2rem; color: var(--primary);"></i> +94 76 484 9127
-            </p>
-            <p class="cv-item-desc" style="display: flex; align-items: center; gap: 8px;">
-              <i class="ph ph-map-pin" style="font-size: 1.2rem; color: var(--primary);"></i> No 215/B, Kandapanasala road, Maha Waskaduwa, Waskaduwa, Kalutara
-            </p>
-            <p class="cv-item-desc" style="display: flex; align-items: center; gap: 8px;">
-              <i class="ph ph-envelope-simple" style="font-size: 1.2rem; color: var(--primary);"></i> <a href="mailto:nikithakeshan@gmail.com" style="text-decoration: underline;">nikithakeshan@gmail.com</a>
-            </p>
-            <p class="cv-item-desc" style="display: flex; align-items: center; gap: 8px;">
-              <i class="ph ph-cake" style="font-size: 1.2rem; color: var(--primary);"></i> 27th October 2002
-            </p>
-            <p class="cv-item-desc" style="display: flex; align-items: center; gap: 8px;">
-              <i class="ph ph-linkedin-logo" style="font-size: 1.2rem; color: var(--primary);"></i> <a href="https://www.linkedin.com/in/nikitha-keshan-640927325/" target="_blank" rel="noreferrer" style="text-decoration: underline;">Nikitha Keshan</a>
-            </p>
-          </div>
-        </div>
-
-        <div>
-          <div class="cv-section-title">Education</div>
-
-          <div class="cv-item">
-            <div class="cv-item-header">
-              <span class="cv-item-title">BIT (Bachelor of Information Technology) - Ongoing</span>
-            </div>
-            <div class="mono" style="margin-bottom: 8px;">University of Colombo</div>
-          </div>
-
-          <div class="cv-item">
-            <div class="cv-item-header">
-              <span class="cv-item-title">HND in Computer Science - Ongoing</span>
-            </div>
-            <div class="mono" style="margin-bottom: 8px;">Londoncity City Campus</div>
-          </div>
-
-          <div class="cv-item">
-            <div class="cv-item-header">
-              <span class="cv-item-title">Programming in Python &amp; Web Development</span>
-            </div>
-            <div class="mono" style="margin-bottom: 8px;">University of Moratuwa (DP education)</div>
-          </div>
-
-          <div class="cv-item">
-            <div class="cv-item-header">
-              <span class="cv-item-title">Foundation Programme</span>
-            </div>
-            <div class="mono" style="margin-bottom: 8px;">JAVA Institute</div>
-            <ul class="cv-item-desc" style="list-style: disc; margin-left: 20px;">
-              <li>Neuroscience</li>
-              <li>Programing</li>
-              <li>Robotic Science</li>
-            </ul>
-          </div>
-
-          <div class="cv-item">
-            <div class="cv-item-header">
-              <span class="cv-item-title">G.C.E. Ordinary Level Examination 2019</span>
-            </div>
-            <div class="mono" style="margin-bottom: 8px;">Tissa Central Collage – Kalutara</div>
-            <p class="cv-item-desc">Results - 4As, 1Bs &amp; 4Cs</p>
-          </div>
-
-          <div class="cv-item">
-            <div class="cv-item-header">
-              <span class="cv-item-title">G.C.E. Advanced Level Examination 2022 (2023)</span>
-            </div>
-            <div class="mono" style="margin-bottom: 8px;">D. S. Senanayake College – Beruwela</div>
-            <p class="cv-item-desc">Stream - Engineering Technology Stream<br>Results - C2s, S1</p>
-          </div>
-        </div>
-
-        <div>
-          <div class="cv-section-title">Employment History</div>
+        
+        <aside class="cv-sidebar">
           
-          <div class="cv-item">
-            <div class="cv-item-header">
-              <span class="cv-item-title">Assistant IT Administrator</span>
-              <span class="cv-item-meta">2024 July – Present</span>
+          <div>
+            <img src="keshanimage.png" alt="Nikitha Keshan" class="cv-profile-img" loading="lazy" />
+            <div class="cv-header cv-header-mobile">
+              <h1>P.N.C.K.<br>GOMES</h1>
             </div>
-            <div class="mono" style="margin-bottom: 8px;">CER Group of Companies (Biseka, Love&amp;Lab, Scrub&amp;Butter, ExtractExact OltaAngle, MossBuffets)</div>
-            <ul class="cv-item-desc" style="list-style: disc; margin-left: 20px; display: grid; gap: 8px;">
-              <li>Manage and maintain IT systems, dashboards, and automation tools across all brands.</li>
-              <li>Update Google Sheets, databases, and dashboards for accurate reporting.</li>
-              <li>Develop and improve automation scripts using Google Apps Script.</li>
-              <li>Handle website updates, products, pricing, and promotions.</li>
-              <li>Manage Google Ads, Merchant Center, and Meta Business Suite integrations.</li>
-              <li>Provide IT support for devices, software, operations and troubleshooting.</li>
-              <li>Oversee backups, access control, and version management.</li>
-              <li>Create and maintain IT and automation process documentation.</li>
-              <li>Build dashboards in Looker Studio for KPI tracking.</li>
-            </ul>
-            <p class="cv-item-desc" style="margin-top: 16px; font-style: italic;">I do hereby declare that all statement made in this application are true and correct to the best of my knowledge.</p>
           </div>
-        </div>
 
-        <div>
-          <div class="cv-section-title">Achievements and Projects</div>
-          <div class="cv-item">
-            <ul class="cv-item-desc" style="list-style: disc; margin-left: 20px; display: grid; gap: 8px;">
-              <li>Automated using spreadsheet AppScript &amp; Excel VBA to make process easier</li>
-              <li>Skin analyzer using React, Python</li>
-              <li>Invoice generator, SMS campaign analyzers for my own work</li>
-              <li>Social media analyzer and account manager for manage my work</li>
-              <li>Web projects by myself using React, HTML, CSS and JavaScript</li>
-            </ul>
+          <div class="cv-section">
+            <div class="cv-section-title">Contact</div>
+            <div class="cv-contact-list">
+              <div class="cv-contact-item">
+                <i class="ph ph-phone cv-contact-icon"></i> 
+                <span>+94 76 484 9127</span>
+              </div>
+              <div class="cv-contact-item">
+                <i class="ph ph-map-pin cv-contact-icon"></i> 
+                <span>No 215/B, Kandapanasala road, Maha Waskaduwa, Waskaduwa, Kalutara</span>
+              </div>
+              <div class="cv-contact-item">
+                <i class="ph ph-envelope-simple cv-contact-icon"></i> 
+                <a href="mailto:nikithakeshan@gmail.com">nikithakeshan@gmail.com</a>
+              </div>
+              <div class="cv-contact-item">
+                <i class="ph ph-cake cv-contact-icon"></i> 
+                <span>27th October 2002</span>
+              </div>
+              <div class="cv-contact-item">
+                <i class="ph ph-linkedin-logo cv-contact-icon"></i> 
+                <a href="https://www.linkedin.com/in/nikitha-keshan-640927325/" target="_blank" rel="noreferrer">Nikitha Keshan</a>
+              </div>
+            </div>
           </div>
-        </div>
 
-        <div>
-          <div class="cv-section-title">References</div>
+          <div class="cv-section">
+            <div class="cv-section-title">Education</div>
+
+            <div class="cv-item">
+              <div class="cv-item-title">BIT (Bachelor of Information Technology) - Ongoing</div>
+              <div class="cv-item-subtitle">University of Colombo</div>
+            </div>
+
+            <div class="cv-item">
+              <div class="cv-item-title">HND in Computer Science - Ongoing</div>
+              <div class="cv-item-subtitle">Londoncity City Campus</div>
+            </div>
+
+            <div class="cv-item">
+              <div class="cv-item-title">Programming in Python &amp; Web Development</div>
+              <div class="cv-item-subtitle">University of Moratuwa (DP education)</div>
+            </div>
+
+            <div class="cv-item">
+              <div class="cv-item-title">Foundation Programme</div>
+              <div class="cv-item-subtitle">JAVA Institute</div>
+              <ul class="cv-item-desc" style="list-style: disc; margin-left: 20px;">
+                <li>Neuroscience</li>
+                <li>Programing</li>
+                <li>Robotic Science</li>
+              </ul>
+            </div>
+
+            <div class="cv-item">
+              <div class="cv-item-title">G.C.E. Ordinary Level Examination 2019</div>
+              <div class="cv-item-subtitle">Tissa Central Collage – Kalutara</div>
+              <p class="cv-item-desc">Results - 4As, 1Bs &amp; 4Cs</p>
+            </div>
+
+            <div class="cv-item">
+              <div class="cv-item-title">G.C.E. Advanced Level Examination 2022 (2023)</div>
+              <div class="cv-item-subtitle">D. S. Senanayake College – Beruwela</div>
+              <p class="cv-item-desc">Stream - Engineering Technology Stream<br>Results - C2s, S1</p>
+            </div>
+          </div>
+        </aside>
+
+        <main class="cv-main-content">
           
-          <div class="cv-item">
-            <div class="cv-item-header">
-              <span class="cv-item-title">Thilina Hansamala</span>
-            </div>
-            <div class="mono" style="margin-bottom: 12px;">Head IT Administrator At CER Industries</div>
-            <p class="cv-item-desc" style="display: flex; align-items: center; gap: 8px; margin-bottom: 4px;">
-              <i class="ph ph-envelope-simple" style="color: var(--primary);"></i> <a href="mailto:ajward@sjp.ac.lk" style="text-decoration: underline;">ajward@sjp.ac.lk</a>
-            </p>
-            <p class="cv-item-desc" style="display: flex; align-items: center; gap: 8px;">
-              <i class="ph ph-phone" style="color: var(--primary);"></i> 075 654 7410
-            </p>
+          <div class="cv-header cv-header-desktop">
+            <h1>P.N.C.K. GOMES</h1>
           </div>
 
-          <div class="cv-item">
-            <div class="cv-item-header">
-              <span class="cv-item-title">Manil Alahapperuma</span>
+          <div class="cv-section">
+            <div class="cv-section-title">Summary</div>
+            <div class="cv-item">
+              <p class="cv-item-desc">As an enthusiastic and adaptable young professional, I aspire to advance my career in the IT industry as a skilled, dependable expert. I aim to contribute my technical knowledge, problem-solving abilities, and strong interpersonal skills to a well-respected organization.</p>
             </div>
-            <div class="mono" style="margin-bottom: 12px;">Science Teacher at Tissa Central College (National College)</div>
-            <p class="cv-item-desc" style="display: flex; align-items: center; gap: 8px; margin-bottom: 4px;">
-              <i class="ph ph-envelope-simple" style="color: var(--primary);"></i> <a href="mailto:pasinduera@navalokamedicare.com" style="text-decoration: underline;">pasinduera@navalokamedicare.com</a>
-            </p>
-            <p class="cv-item-desc" style="display: flex; align-items: center; gap: 8px;">
-              <i class="ph ph-phone" style="color: var(--primary);"></i> 071 882 9540
-            </p>
           </div>
-        </div>
 
+          <div class="cv-section">
+            <div class="cv-section-title">Employment History</div>
+            
+            <div class="cv-item">
+              <div class="cv-item-header">
+                <span class="cv-item-title">Assistant IT Administrator</span>
+                <span class="cv-item-meta">2024 July – Present</span>
+              </div>
+              <div class="cv-item-subtitle" style="margin-bottom: 8px;">CER Group of Companies (Biseka, Love&amp;Lab, Scrub&amp;Butter, ExtractExact OltaAngle, MossBuffets)</div>
+              <ul class="cv-item-desc" style="list-style: disc; margin-left: 20px; display: grid; gap: 8px;">
+                <li>Manage and maintain IT systems, dashboards, and automation tools across all brands.</li>
+                <li>Update Google Sheets, databases, and dashboards for accurate reporting.</li>
+                <li>Develop and improve automation scripts using Google Apps Script.</li>
+                <li>Handle website updates, products, pricing, and promotions.</li>
+                <li>Manage Google Ads, Merchant Center, and Meta Business Suite integrations.</li>
+                <li>Provide IT support for devices, software, operations and troubleshooting.</li>
+                <li>Oversee backups, access control, and version management.</li>
+                <li>Create and maintain IT and automation process documentation.</li>
+                <li>Build dashboards in Looker Studio for KPI tracking.</li>
+              </ul>
+            </div>
+          </div>
+
+          <div class="cv-section">
+            <div class="cv-section-title">Achievements and Projects</div>
+            <div class="cv-item">
+              <ul class="cv-item-desc" style="list-style: disc; margin-left: 20px; display: grid; gap: 8px;">
+                <li>Automated using spreadsheet AppScript &amp; Excel VBA to make process easier</li>
+                <li>Skin analyzer using React, Python</li>
+                <li>Invoice generator, SMS campaign analyzers for my own work</li>
+                <li>Social media analyzer and account manager for manage my work</li>
+                <li>Web projects by myself using React, HTML, CSS and JavaScript</li>
+              </ul>
+            </div>
+          </div>
+
+          <div class="cv-section" style="margin-top: 16px;">
+            <div class="cv-section-title">References</div>
+            <div class="cv-references-grid">
+              <div class="cv-item">
+                <div class="cv-item-title">Thilina Hansamala</div>
+                <div class="cv-item-subtitle" style="margin-bottom: 8px;">Head IT Administrator At CER Industries</div>
+                <div class="cv-contact-list" style="gap: 8px;">
+                  <div class="cv-contact-item">
+                    <i class="ph ph-envelope-simple cv-contact-icon"></i> 
+                    <a href="mailto:yours.automation@gmail.com">yours.automation@gmail.com</a>
+                  </div>
+                  <div class="cv-contact-item">
+                    <i class="ph ph-phone cv-contact-icon"></i> 
+                    <span>075 654 7410</span>
+                  </div>
+                </div>
+              </div>
+
+              <div class="cv-item">
+                <div class="cv-item-title">Dasun Abeysooriya</div>
+                <div class="cv-item-subtitle" style="margin-bottom: 8px;">General Manager At CER Industries</div>
+                <div class="cv-contact-list" style="gap: 8px;">
+                  <div class="cv-contact-item">
+                    <i class="ph ph-envelope-simple cv-contact-icon"></i> 
+                    <a href="mailto:dasun.biseka@gmail.com">dasun.biseka@gmail.com</a>
+                  </div>
+                  <div class="cv-contact-item">
+                    <i class="ph ph-phone cv-contact-icon"></i> 
+                    <span>071 740 7494</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="cv-section" style="margin-top: 16px;">
+            <div class="cv-section-title">Declaration</div>
+            <div class="cv-item">
+              <p class="cv-item-desc" style="font-style: italic;">I do hereby declare that all statement made in this application are true and correct to the best of my knowledge.</p>
+              <div style="margin-top: 20px; display: flex; gap: 150px;">
+                <div style="text-align: center;">
+                  <p>___________________</p>
+                  <p style="margin-top: 5px; font-weight: bold;">Signature</p>
+                </div>
+                <div style="text-align: center;">
+                  <p>___________________</p>
+                  <p style="margin-top: 5px; font-weight: bold;">Date: <span id="currentDate"></span></p>
+                </div>
+              </div>
+            </div>
+          </div>
+
+        </main>
       </div>
     </div>
   </section>
@@ -1622,6 +1813,9 @@
       const $ = (selector, scope = document) => scope.querySelector(selector);
       const $$ = (selector, scope = document) => Array.from(scope.querySelectorAll(selector));
       const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+      // Set current date in CV
+      document.getElementById('currentDate').textContent = new Date().toLocaleDateString();
 
       const siteConfig = {
         email: 'nikithakeshan@gmail.com',
@@ -2223,6 +2417,62 @@
         });
       };
 
+      // ----------------------------------------------------
+      // REWRITTEN PDF DOWNLOAD SCRIPT FOR EXACT A4 MATCH
+      // ----------------------------------------------------
+      const initPdfDownload = () => {
+        $$('.download-cv-trigger').forEach(btn => {
+          btn.addEventListener('click', (e) => {
+            e.preventDefault();
+            const sourceElement = $('.cv-paper');
+            
+            // Add visual loading state
+            const originalHtml = btn.innerHTML;
+            btn.innerHTML = '<i class="ph ph-spinner-gap"></i> <span class="hide-mobile" style="margin-left: 8px;">Generating...</span>';
+            btn.style.pointerEvents = 'none';
+
+            // CLONE THE ELEMENT to pull it out of the hidden/scrollable modal context
+            const element = sourceElement.cloneNode(true);
+            element.classList.add('is-exporting');
+            document.body.appendChild(element); // Append to DOM so html2canvas can read it
+
+            // PDF Options enforcing strict 794x1123 matching our CSS grid
+            const opt = {
+              margin:       0,
+              filename:     'Nikitha_Keshan_Virtual_Resume.pdf',
+              image:        { type: 'jpeg', quality: 1.0 },
+              html2canvas:  { 
+                scale: 2, 
+                useCORS: true, 
+                backgroundColor: '#ffffff', 
+                windowWidth: 794,
+                scrollY: 0,
+                scrollX: 0
+              },
+              jsPDF:        { 
+                unit: 'px', 
+                format: [794, 1123], 
+                orientation: 'portrait' 
+              }
+            };
+
+            html2pdf().set(opt).from(element).save().then(() => {
+              // Cleanup dummy DOM element
+              document.body.removeChild(element);
+
+              // Restore button state
+              btn.innerHTML = originalHtml;
+              btn.style.pointerEvents = 'auto';
+            }).catch(err => {
+              console.error("PDF generation failed: ", err);
+              if (document.body.contains(element)) document.body.removeChild(element);
+              btn.innerHTML = originalHtml;
+              btn.style.pointerEvents = 'auto';
+            });
+          });
+        });
+      };
+
       const initActiveNav = () => {
         if (!('IntersectionObserver' in window)) return;
         const sections = $$('main section[id]');
@@ -2307,6 +2557,7 @@
         initProjectFilters();
         initContactForm();
         initModal();
+        initPdfDownload(); 
         initActiveNav();
         initCursor();
         initUtilities();
