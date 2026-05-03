@@ -398,14 +398,6 @@
     .social-icon.email { color: var(--g-red); background: var(--g-red-alpha); } 
     .social-icon.linkedin { color: var(--g-blue); background: var(--g-blue-alpha); } 
     .social-icon.whatsapp { color: #25D366; background: rgba(37, 211, 102, 0.15); }
-    
-    .social-compact-row { display: flex; gap: 12px; flex-wrap: wrap; }
-    .compact-btn { width: 56px; height: 56px; border-radius: var(--radius-md); display: grid; place-items: center; background: var(--surface); border: 1px solid var(--line); font-size: 1.5rem; transition: var(--transition); color: var(--muted); }
-    .compact-btn:hover { transform: translateY(-4px); background: var(--surface-2); box-shadow: var(--shadow-soft); }
-    .compact-btn.github:hover { color: var(--text); border-color: var(--line-strong); }
-    .compact-btn.twitter:hover { color: var(--text); border-color: var(--line-strong); }
-    .compact-btn.facebook:hover { color: #1877F2; border-color: #1877F2; background: rgba(24, 119, 242, 0.1); }
-    .compact-btn.instagram:hover { color: #E4405F; border-color: #E4405F; background: rgba(228, 64, 95, 0.1); }
 
     .utility-row { display: flex; gap: 16px; flex-wrap: wrap; margin-top: 8px; }
 
@@ -457,6 +449,89 @@
     
     .modal-footer { display: flex; align-items: center; justify-content: space-between; gap: 16px; flex-wrap: wrap; padding: 16px 32px 32px; }
 
+    /* Neural Link Modal Styles - Upgraded with dynamic colors */
+    .neural-modal {
+      width: min(1200px, calc(100% - 32px));
+      background: #0a0e14;
+      color: #ffffff;
+      border: 1px solid rgba(255,255,255,0.1);
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+    }
+    .neural-canvas {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      z-index: 0;
+      pointer-events: none;
+    }
+    .neural-content {
+      position: relative;
+      z-index: 1;
+      padding: 32px;
+      overflow-y: auto;
+      flex-grow: 1;
+    }
+    .neural-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+      gap: 16px;
+    }
+    .neural-node {
+      background: rgba(255, 255, 255, 0.03);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      backdrop-filter: blur(12px);
+      border-radius: var(--radius-md);
+      padding: 24px 16px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 12px;
+      text-align: center;
+      transition: all 0.3s cubic-bezier(0.2, 0, 0, 1);
+      color: rgba(255,255,255,0.8);
+      text-decoration: none;
+    }
+    .neural-node i {
+      font-size: 2.25rem;
+      color: var(--brand-color, var(--g-blue));
+      transition: color 0.3s ease, transform 0.3s ease;
+      filter: drop-shadow(0 0 8px rgba(255,255,255,0.1));
+    }
+    .neural-node:hover {
+      background: rgba(255, 255, 255, 0.08);
+      border-color: var(--brand-color);
+      transform: translateY(-4px) scale(1.02);
+      box-shadow: 0 12px 32px color-mix(in srgb, var(--brand-color) 20%, transparent);
+      color: #fff;
+    }
+    .neural-node:hover i {
+      color: var(--brand-color);
+      filter: drop-shadow(0 0 12px var(--brand-color));
+      transform: scale(1.1);
+    }
+    .neural-node span {
+      font-family: var(--font-mono);
+      font-size: 0.75rem;
+      word-break: break-word;
+      line-height: 1.4;
+    }
+    .neural-header-bg {
+      background: rgba(10, 14, 20, 0.85);
+      border-bottom: 1px solid rgba(255,255,255,0.1);
+    }
+    .neural-close-btn {
+      color: #fff;
+      background: rgba(255,255,255,0.1);
+      border: 1px solid rgba(255,255,255,0.05);
+    }
+    .neural-close-btn:hover {
+      background: rgba(255,255,255,0.15);
+    }
+
     /* CV Modal Styles */
     .cv-modal {
       width: min(1060px, calc(100% - 32px));
@@ -465,10 +540,10 @@
     }
     
     /* Hide scrollbar for CV Modal */
-    #cvModal::-webkit-scrollbar {
+    #cvModal::-webkit-scrollbar, #neuralModal::-webkit-scrollbar {
       display: none;
     }
-    #cvModal {
+    #cvModal, #neuralModal {
       -ms-overflow-style: none;  /* IE and Edge */
       scrollbar-width: none;  /* Firefox */
     }
@@ -1422,24 +1497,29 @@
               <i class="ph ph-arrow-up-right"></i>
             </a>
 
-            <div class="mono" style="margin-top: 8px;">Find me elsewhere</div>
-            <div class="social-compact-row">
-              <a href="https://github.com/nikithaKesh" target="_blank" rel="noreferrer" class="compact-btn github" aria-label="GitHub">
-                <i class="ph ph-github-logo"></i>
-              </a>
-              <a href="https://x.com/_zo_no_" target="_blank" rel="noreferrer" class="compact-btn twitter" aria-label="Twitter / X">
-                <i class="ph ph-x-logo"></i>
-              </a>
-              <a href="https://web.facebook.com/nikitha.keshan.7" target="_blank" rel="noreferrer" class="compact-btn facebook" aria-label="Facebook">
-                <i class="ph ph-facebook-logo"></i>
-              </a>
-              <a href="https://www.instagram.com/z.onoo/" target="_blank" rel="noreferrer" class="compact-btn instagram" aria-label="Instagram">
-                <i class="ph ph-instagram-logo"></i>
-              </a>
-            </div>
-            
-            <div class="utility-row">
+            <div class="mono" style="margin-top: 16px;">Base of Operations</div>
+            <a href="https://maps.app.goo.gl/92YSmSagvwY27RFp7" target="_blank" rel="noreferrer" class="social-btn" style="margin-top: 8px; position: relative; overflow: hidden;">
+              <div style="position: absolute; right: 0; top: 0; bottom: 0; width: 40%; background: radial-gradient(circle at center, var(--g-red-alpha) 0%, transparent 70%); opacity: 0.5; pointer-events: none;"></div>
+              <div style="position: absolute; right: 20px; top: 50%; transform: translateY(-50%); opacity: 0.05; font-size: 8rem; pointer-events: none;"><i class="ph ph-map-trifold"></i></div>
+              <div class="social-main">
+                <div class="social-icon" style="background: var(--surface-2); border: 1px solid var(--line); color: var(--g-red);"><i class="ph ph-map-pin"></i></div>
+                <div>
+                  <span class="mono" style="display:block; margin-bottom: 6px;">Location</span>
+                  <span class="title-sm">Kalutara & Colombo, Sri Lanka</span>
+                </div>
               </div>
+              <i class="ph ph-arrow-up-right" style="position: relative; z-index: 1;"></i>
+            </a>
+            
+            <div class="utility-row" style="margin-top: 16px;">
+              <button type="button" class="btn btn-primary" id="openNeuralBtn" style="width: 100%; border-radius: var(--radius-lg); min-height: 64px;">
+                <i class="ph ph-share-network" style="font-size: 1.5rem;"></i>
+                <span style="display: flex; flex-direction: column; align-items: flex-start; margin-left: 8px;">
+                  <span style="font-size: 1.1rem; line-height: 1.2;">Neural Link Hub</span>
+                  <span class="mono" style="font-size: 0.75rem; color: rgba(255,255,255,0.8); text-transform: none;">Connect to 25+ Endpoints</span>
+                </span>
+              </button>
+            </div>
           </div>
 
           <div class="card contact-form-card">
@@ -1516,6 +1596,7 @@
 
   <div class="backdrop" id="modalBackdrop"></div>
 
+  <!-- Regular Project Modal -->
   <section class="modal" id="projectModal" role="dialog" aria-modal="true" aria-labelledby="modalTitle" aria-describedby="modalOverview" tabindex="-1">
     <div class="modal-header">
       <div>
@@ -1602,11 +1683,36 @@
     </div>
   </section>
 
-  <section class="modal cv-modal" id="cvModal" role="dialog" aria-modal="true" aria-labelledby="cvModalTitle" tabindex="-1">
-    <div class="modal-header" style="justify-content: flex-end; align-items: center; border-bottom: none; padding-bottom: 0;">
-      <button class="btn-icon" id="cvModalClose" type="button" aria-label="Close resume dialog">
+  <!-- Neural Link Hub Modal -->
+  <section class="modal neural-modal" id="neuralModal" role="dialog" aria-modal="true" tabindex="-1">
+    <canvas id="neuralCanvas" class="neural-canvas"></canvas>
+    <div class="modal-header neural-header-bg">
+      <div>
+        <div class="mono" style="color: var(--g-blue); margin-bottom: 8px;"><i class="ph ph-graph"></i> Connecting Synapses</div>
+        <h3 class="title-lg" style="color: #fff;">Neural Link Hub</h3>
+      </div>
+      <button class="btn-icon neural-close-btn" id="neuralClose" type="button" aria-label="Close neural hub">
         <i class="ph ph-x"></i>
       </button>
+    </div>
+    <div class="neural-content">
+      <div class="neural-grid" id="neuralGrid">
+         <!-- Links will be injected here via JS -->
+      </div>
+    </div>
+  </section>
+
+  <!-- CV Modal -->
+  <section class="modal cv-modal" id="cvModal" role="dialog" aria-modal="true" aria-labelledby="cvModalTitle" tabindex="-1">
+    <div class="modal-header" style="justify-content: flex-end; align-items: center; border-bottom: none; padding-bottom: 0;">
+      <div style="display: flex; gap: 12px; align-items: center; margin-top: -16px;">
+        <button type="button" class="btn btn-primary download-cv-trigger" style="min-height: 40px; padding: 0 20px;">
+          <i class="ph ph-download-simple"></i> <span class="hide-mobile" style="margin-left: 8px;">Download PDF</span>
+        </button>
+        <button class="btn-icon" id="cvModalClose" type="button" aria-label="Close resume dialog">
+          <i class="ph ph-x"></i>
+        </button>
+      </div>
     </div>
 
     <div class="modal-body" style="padding-top: 16px;">
@@ -1960,6 +2066,35 @@
         { name: 'LoveandLab', domain: 'loveandlab.com' }
       ];
 
+      // Added dynamic brand colors for each link
+      const neuralLinks = [
+        { name: "Threads", url: "https://www.threads.net/@z.onoo", icon: "ph-threads-logo", color: "#ffffff" },
+        { name: "Medium", url: "https://medium.com/@nikithagithub", icon: "ph-medium-logo", color: "#ffffff" },
+        { name: "GitHub", url: "https://github.com/nikithaKesh", icon: "ph-github-logo", color: "#fafafa" },
+        { name: "Pinterest", url: "https://www.pinterest.com/mrzonooo/", icon: "ph-pinterest-logo", color: "#E60023" },
+        { name: "Pins Collect", url: "https://www.pinterest.com/zonocollecters/", icon: "ph-pinterest-logo", color: "#E60023" },
+        { name: "YouTube", url: "https://www.youtube.com/@NikithaKeshan", icon: "ph-youtube-logo", color: "#FF0000" },
+        { name: "Snapchat", url: "https://www.snapchat.com/add/z.onoo", icon: "ph-snapchat-logo", color: "#FFFC00" },
+        { name: "BuyMeACoffee", url: "https://buymeacoffee.com/nikitha_keshan", icon: "ph-coffee", color: "#FFDD00" },
+        { name: "X (Twitter)", url: "https://x.com/_zo_no_", icon: "ph-x-logo", color: "#ffffff" },
+        { name: "LinkedIn", url: "https://www.linkedin.com/in/nikitha-keshan-640927325/", icon: "ph-linkedin-logo", color: "#0A66C2" },
+        { name: "Facebook", url: "https://www.facebook.com/nikitha.keshan.7?mibextid=ZbWKwL", icon: "ph-facebook-logo", color: "#1877F2" },
+        { name: "Behance", url: "https://www.behance.net/nikithakeshan", icon: "ph-behance-logo", color: "#1769ff" },
+        { name: "Duolingo", url: "https://www.duolingo.com/profile/Nikithakeshan", icon: "ph-globe", color: "#58CC02" },
+        { name: "WhatsApp", url: "https://api.whatsapp.com/send/?phone=%2B94764849127&text&type=phone_number&app_absent=0", icon: "ph-whatsapp-logo", color: "#25D366" },
+        { name: "Gmail", url: "mailto:nikithakeshan@gmail.com", icon: "ph-envelope-simple", color: "#EA4335" },
+        { name: "Spotify", url: "https://open.spotify.com/user/31eeuieo76wofughxmzpil26x4ea", icon: "ph-spotify-logo", color: "#1DB954" },
+        { name: "GitLab", url: "https://gitlab.com/nikithagithub", icon: "ph-gitlab-logo", color: "#FC6D26" },
+        { name: "Blogpost", url: "https://nikithakeshan.blogspot.com/", icon: "ph-article", color: "#FF5722" },
+        { name: "Wattpad", url: "https://www.wattpad.com/user/nikithakeshak", icon: "ph-book-open", color: "#FF500A" },
+        { name: "Instagram", url: "https://www.instagram.com/z.onoo/", icon: "ph-instagram-logo", color: "#E4405F" },
+        { name: "TikTok", url: "https://www.tiktok.com/@z.onoo", icon: "ph-tiktok-logo", color: "#00f2fe" },
+        { name: "Discord", url: "https://discord.gg/4YuQ8HrJ", icon: "ph-discord-logo", color: "#5865F2" },
+        { name: "Cosmos (Code)", url: "https://cosmos.so/nikithakeshan", icon: "ph-planet", color: "#8a2be2" },
+        { name: "Cosmos (Art)", url: "https://cosmos.so/z.onoo", icon: "ph-planet", color: "#8a2be2" },
+        { name: "Location", url: "https://maps.app.goo.gl/92YSmSagvwY27RFp7", icon: "ph-map-pin", color: "#EA4335" }
+      ];
+
       const state = { filter: 'all', search: '', sort: 'featured', activeProjectId: null, lastFocus: null };
 
       const els = {
@@ -2005,6 +2140,11 @@
         cvModal: $('#cvModal'),
         cvModalClose: $('#cvModalClose'),
         openCvBtn: $('#openCvBtn'),
+        neuralModal: $('#neuralModal'),
+        neuralClose: $('#neuralClose'),
+        neuralGrid: $('#neuralGrid'),
+        openNeuralBtn: $('#openNeuralBtn'),
+        neuralCanvas: $('#neuralCanvas'),
         logoGrid: $('#logoGrid'),
         preloader: $('#preloader')
       };
@@ -2235,7 +2375,7 @@
       };
 
       const closeBackdrop = () => {
-        if (!els.modal.classList.contains('show') && !els.cvModal.classList.contains('show')) {
+        if (!els.modal.classList.contains('show') && !els.cvModal.classList.contains('show') && !els.neuralModal.classList.contains('show')) {
           els.modalBackdrop.classList.remove('show');
           document.body.style.overflow = '';
         }
@@ -2300,6 +2440,106 @@
         els.cvModal.classList.remove('show');
         closeBackdrop();
         if (state.lastFocus && typeof state.lastFocus.focus === 'function') state.lastFocus.focus();
+      };
+
+      /* NEURAL LINK HUB LOGIC */
+      let neuralAnimId = null;
+      const initNeuralModal = () => {
+        // Populate Grid - using inline variable for dynamic color injection
+        els.neuralGrid.innerHTML = neuralLinks.map(link => `
+          <a href="${link.url}" target="_blank" rel="noreferrer" class="neural-node" style="--brand-color: ${link.color};">
+            <i class="ph ${link.icon}"></i>
+            <span>${link.name}</span>
+          </a>
+        `).join('');
+
+        els.openNeuralBtn.addEventListener('click', () => {
+          state.lastFocus = document.activeElement;
+          openBackdrop();
+          els.neuralModal.classList.add('show');
+          els.neuralModal.focus();
+          startNeuralAnimation();
+        });
+
+        els.neuralClose.addEventListener('click', closeNeuralModal);
+      };
+
+      const closeNeuralModal = () => {
+        if (!els.neuralModal.classList.contains('show')) return;
+        els.neuralModal.classList.remove('show');
+        closeBackdrop();
+        stopNeuralAnimation();
+        if (state.lastFocus && typeof state.lastFocus.focus === 'function') state.lastFocus.focus();
+      };
+
+      const startNeuralAnimation = () => {
+        const canvas = els.neuralCanvas;
+        const ctx = canvas.getContext('2d');
+        let width = canvas.width = els.neuralModal.clientWidth;
+        let height = canvas.height = els.neuralModal.clientHeight;
+        const particles = [];
+        const particleCount = prefersReducedMotion ? 20 : 60;
+
+        for (let i = 0; i < particleCount; i++) {
+          particles.push({
+            x: Math.random() * width,
+            y: Math.random() * height,
+            vx: (Math.random() - 0.5) * 1.5,
+            vy: (Math.random() - 0.5) * 1.5,
+            radius: Math.random() * 2 + 1
+          });
+        }
+
+        const draw = () => {
+          ctx.clearRect(0, 0, width, height);
+          ctx.fillStyle = 'rgba(66, 133, 244, 0.8)';
+          
+          for (let i = 0; i < particleCount; i++) {
+            let p = particles[i];
+            p.x += p.vx;
+            p.y += p.vy;
+            
+            if (p.x < 0 || p.x > width) p.vx *= -1;
+            if (p.y < 0 || p.y > height) p.vy *= -1;
+
+            ctx.beginPath();
+            ctx.arc(p.x, p.y, p.radius, 0, Math.PI * 2);
+            ctx.fill();
+
+            for (let j = i + 1; j < particleCount; j++) {
+              let p2 = particles[j];
+              let dx = p.x - p2.x;
+              let dy = p.y - p2.y;
+              let dist = Math.sqrt(dx * dx + dy * dy);
+
+              if (dist < 120) {
+                ctx.beginPath();
+                ctx.strokeStyle = `rgba(66, 133, 244, ${1 - dist / 120})`;
+                ctx.lineWidth = 1;
+                ctx.moveTo(p.x, p.y);
+                ctx.lineTo(p2.x, p2.y);
+                ctx.stroke();
+              }
+            }
+          }
+          neuralAnimId = requestAnimationFrame(draw);
+        };
+        draw();
+
+        // Handle Resize while open
+        window.addEventListener('resize', resizeCanvas);
+        function resizeCanvas() {
+          if(!els.neuralModal.classList.contains('show')) return;
+          width = canvas.width = els.neuralModal.clientWidth;
+          height = canvas.height = els.neuralModal.clientHeight;
+        }
+      };
+
+      const stopNeuralAnimation = () => {
+        if (neuralAnimId) {
+          cancelAnimationFrame(neuralAnimId);
+          neuralAnimId = null;
+        }
       };
 
       const validateField = (field) => {
@@ -2405,6 +2645,7 @@
         els.modalBackdrop.addEventListener('click', () => { 
           closeProjectModal(); 
           closeCvModal();
+          closeNeuralModal();
         });
       };
 
@@ -2486,8 +2727,8 @@
           dot.style.transform = `translate(${event.clientX}px, ${event.clientY}px)`;
           ring.style.transform = `translate(${event.clientX}px, ${event.clientY}px)`;
         });
-        document.body.addEventListener('mouseover', (event) => { if (event.target.closest('a, button, input, textarea, select, .project-card, .social-btn, .compact-btn')) ring.classList.add('active'); }, true);
-        document.body.addEventListener('mouseout', (event) => { if (event.target.closest('a, button, input, textarea, select, .project-card, .social-btn, .compact-btn')) ring.classList.remove('active'); }, true);
+        document.body.addEventListener('mouseover', (event) => { if (event.target.closest('a, button, input, textarea, select, .project-card, .social-btn, .compact-btn, .neural-node')) ring.classList.add('active'); }, true);
+        document.body.addEventListener('mouseout', (event) => { if (event.target.closest('a, button, input, textarea, select, .project-card, .social-btn, .compact-btn, .neural-node')) ring.classList.remove('active'); }, true);
       };
 
       const initUtilities = () => {
@@ -2500,10 +2741,12 @@
         if (event.key === 'Escape') {
           if (els.modal.classList.contains('show')) closeProjectModal();
           if (els.cvModal.classList.contains('show')) closeCvModal();
+          if (els.neuralModal.classList.contains('show')) closeNeuralModal();
           if (els.mobilePanel.classList.contains('open')) setMobileMenu(false);
         }
         if (els.modal.classList.contains('show')) trapFocus(els.modal, event);
         if (els.cvModal.classList.contains('show')) trapFocus(els.cvModal, event);
+        if (els.neuralModal.classList.contains('show')) trapFocus(els.neuralModal, event);
       };
 
       const initAnchorPolish = () => {
@@ -2548,6 +2791,7 @@
         initProjectFilters();
         initContactForm();
         initModal();
+        initNeuralModal();
         initPdfDownload(); 
         initActiveNav();
         initCursor();
